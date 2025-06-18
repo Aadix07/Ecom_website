@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .product-image {
+            width: 100%;
+            max-width: 300px;
+        }
+        .product-detail {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .product-detail img {
+            flex: 1 1 40%;
+            max-width: 400px;
+        }
+        .product-info {
+            flex: 1 1 60%;
+            padding: 20px;
+        }
+        .product-info h1 {
+            margin-top: 0;
+        }
+        .price {
+            font-size: 24px;
+            color: #333;
+        }
+        .form-group {
+            margin: 10px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="number"] {
+            width: 60px;
+        }
+        .add-to-cart {
+            background-color: #ff9800;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Our Products</h1>
+    </div>
+    <div class="container">
+        <div class="product-detail">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            
+            {% else %}
+                <img src="{% static 'store/cow.jpg' %}" alt="Default Image" class="product-image">
+            {% endif %}
+            <!-- {% for image in product.images.all %}
+            <img src="{{ image.image.url }}" alt="{{ product.name }}" class="product-image">
+            {% endfor %} -->
+<!-- 
+            <img src="{% static 'store/stationary.jpg' %}" alt="{{ product.name }}" class="product-image"> -->
+            <!-- <img src="{% static 'store/jersey.jpeg' %}" alt="{{ product.name }}" class="product-image"> -->
+            <div class="product-info">
+                <h1>{{ product.name }}</h1>
+                <p>{{ product.description }}</p>
+                <p class="price">₹{{ product.price }}</p>
+                <form action="{% url 'add_to_cart' product.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" id="quantity" name="quantity" min="1" value="1">
+                    </div>
+                    <button type="submit" class="add-to-cart">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <a href="{% url 'product_list' %}">Home</a>
+    </div>
+</body>
+</html>

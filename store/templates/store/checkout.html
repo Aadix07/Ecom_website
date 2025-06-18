@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    {% load custom_filters %}
+    <title>Checkout</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("{% static 'store/stationary.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            padding-top: 20px;
+            color: white;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .card {
+            background-color: rgba(12, 8, 8, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Checkout</h1>
+        {% if cart_items %}
+            <div class="row">
+                {% for item in cart_items %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ item.product.name }}</h4>
+                                <h5>Quantity: {{ item.quantity }}</h5>
+                                <h5>Price: ₹{{ item.product.price_per_kg }}</h5>
+                                <h5>Total: ₹{{ item.quantity|multiply:item.product.price_per_kg }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <p>Total Price: ₹{{ total_price }}</p>
+            <form action="{% url 'process_payment' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Finalize Purchase</button>
+            </form>
+        {% else %}
+            <p>Your cart is empty.</p>
+        {% endif %}
+        <a href="{% url 'product_list' %}" class="btn btn-primary">Continue Shopping</a>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

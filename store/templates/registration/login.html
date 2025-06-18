@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>Login - QuillCraft</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("{% static 'store/stationary.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: black;
+        }
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+        .brand-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .brand-header img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+        .brand-name {
+            font-family: 'Matura MT Script Capitals', sans-serif;
+            font-size: 28px;
+            color: #0a8ce8;
+            font-weight: bold;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+        }
+        .btn-primary {
+            background-color: #0a8ce8;
+            border-color: #0a8ce8;
+            width: 100%;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background-color: #0876c7;
+            border-color: #0876c7;
+        }
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .signup-link a {
+            color: #0a8ce8;
+            text-decoration: none;
+        }
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="brand-header">
+            <img src="{% static 'store/pngegg.png' %}" alt="QuillCraft Logo">
+            <div class="brand-name">QuillCraft</div>
+      
+        </div>
+
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username:</label>
+                <input type="text" class="form-control" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default:'' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password:</label>
+                <input type="password" class="form-control" name="password" id="{{ form.password.id_for_label }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <div class="signup-link">
+            <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+        </div>
+
+        <div class="text-center mt-3">
+            <a href="{% url 'product_list' %}" class="btn btn-link">← Back to Store</a>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

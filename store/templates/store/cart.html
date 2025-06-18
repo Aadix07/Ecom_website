@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    {% load custom_filters %}
+    <title>Cart</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("{% static 'store/stationary.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            padding-top: 20px;
+            color: white;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .card {
+            background-color: rgba(12, 8, 8, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Your Cart</h1>
+        {% if cart_items %}
+            <div class="row">
+                {% for item in cart_items %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ item.product.name }}</h4>
+                                <div class="d-flex align-items-center">
+                                    <form method="post" class="me-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                                        <input type="hidden" name="action" value="decrease">
+                                        <button type="submit" class="btn btn-secondary btn-sm">-</button>
+                                    </form>
+                                    <h5 class="mx-2">Quantity: {{ item.quantity }}</h5>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                                        <input type="hidden" name="action" value="increase">
+                                        <button type="submit" class="btn btn-secondary btn-sm">+</button>
+                                    </form>
+                                </div>
+                                <h5>Total: ₹{{ item.quantity|multiply:item.product.price_per_kg }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <ul>
+                {% for item in cart_items %}
+                    <li>{{ item.product.name }} - {{ item.quantity }} x ₹{{ item.product.price_per_kg }}</li>
+                {% endfor %}
+            </ul>
+            <p>Total: ₹{{ total_price }}</p>
+            <a href="{% url 'checkout' %}" class="btn btn-success">Checkout</a>
+        {% else %}
+            <p>Your cart is empty.</p>
+        {% endif %}
+        <a href="{% url 'product_list' %}" class="btn btn-primary">Continue Shopping</a>
+        <!-- Debug information -->
+        <h2>Debug Information</h2>
+        <p>Cart Items Count: {{ cart_items.count }}</p>
+        <ul>
+            {% for item in cart_items %}
+                <li>{{ item.product.name }} - {{ item.quantity }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
